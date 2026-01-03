@@ -25,7 +25,15 @@ warnings.filterwarnings("ignore")
 def get_ticker_data(end_date='2025-05-30', load=False):
 
     if not load:
-        sp500 = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0]
+        #import pdb
+        #pdb.set_trace()
+        
+        # Set User-Agent header to avoid 403 Forbidden error
+        import requests
+        headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+        response = requests.get(url, headers=headers)
+        sp500 = pd.read_html(response.content)[0]
 
         sp500['Symbol'] = sp500['Symbol'].str.replace('.', '-')
 
@@ -352,6 +360,8 @@ def plot_comparison(port_df):
 if __name__ == "__main__":
 
     df = get_ticker_data(end_date=pd.to_datetime('today'), load=False)
+    import pdb
+    pdb.set_trace()
     df = compute_indicators(df)
     feature_data = aggregate_filter(df, load=False)
     feature_data = monthly_returns_diff_time_horizons(feature_data)
