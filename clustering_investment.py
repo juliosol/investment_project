@@ -229,7 +229,7 @@ def plot_clusters(data):
 def select_stocks(df, last_nums=10):
     filtered_df = df[df['cluster']==3].copy()
     filtered_df = filtered_df.reset_index(level=1)
-    filtered_df.index = filtered_df.index + pd.DateOffset(1)
+    #filtered_df.index = filtered_df.index + pd.DateOffset(1)
     filtered_df = filtered_df.reset_index().set_index(['date', 'ticker'])
     dates = filtered_df.index.get_level_values('date').unique().tolist()
 
